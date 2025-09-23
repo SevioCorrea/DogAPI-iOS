@@ -11,6 +11,15 @@ final class DogListViewController: UIViewController {
 
     private let viewModel = DogListViewModel()
 
+    private let infoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Tap the dog"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     private let dogImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -37,10 +46,14 @@ final class DogListViewController: UIViewController {
     }
 
     private func setupViews() {
+        view.addSubview(infoLabel)
         view.addSubview(dogImageView)
         view.addSubview(fetchButton)
 
         NSLayoutConstraint.activate([
+            infoLabel.bottomAnchor.constraint(equalTo: dogImageView.topAnchor, constant: -10),
+            infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
             dogImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dogImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
             dogImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
@@ -51,6 +64,10 @@ final class DogListViewController: UIViewController {
         ])
 
         fetchButton.addTarget(self, action: #selector(fetchButtonTapped), for: .touchUpInside)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapImage))
+        dogImageView.isUserInteractionEnabled = true
+        dogImageView.addGestureRecognizer(tapGesture)
     }
 
     private func setupBindings() {
@@ -70,6 +87,13 @@ final class DogListViewController: UIViewController {
 
     @objc private func fetchButtonTapped() {
         viewModel.fetchDog()
+    }
+
+    @objc private func didTapImage() {
+        guard let dog = viewModel.lastDog else { return }
+        let detailVM = DogDetailViewModel(dog: dog)
+        let detailVC = DogDetailViewController(viewModel: detailVM)
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 
     private func loadImage(from urlString: String) {
