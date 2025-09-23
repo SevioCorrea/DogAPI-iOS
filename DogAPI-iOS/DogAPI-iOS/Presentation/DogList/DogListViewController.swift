@@ -15,6 +15,24 @@ final class DogListViewController: UIViewController {
     private let dogView = DogImageView()
     private let refreshControl = UIRefreshControl()
 
+    private let activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .large)
+        ai.translatesAutoresizingMaskIntoConstraints = false
+        ai.hidesWhenStopped = true
+        return ai
+    }()
+
+    private let errorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Failed to fetch dog. Pull down to retry."
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .red
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -31,6 +49,8 @@ final class DogListViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(dogView)
+        contentView.addSubview(activityIndicator)
+        contentView.addSubview(errorLabel)
 
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
@@ -52,7 +72,13 @@ final class DogListViewController: UIViewController {
             dogView.topAnchor.constraint(equalTo: contentView.topAnchor),
             dogView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             dogView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            dogView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            dogView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            activityIndicator.centerXAnchor.constraint(equalTo: dogView.imageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: dogView.imageView.centerYAnchor),
+
+            errorLabel.topAnchor.constraint(equalTo: dogView.arrowImageView.bottomAnchor, constant: 12),
+            errorLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapImage))
@@ -64,12 +90,18 @@ final class DogListViewController: UIViewController {
         viewModel.stateChanged = { [weak self] state in
             DispatchQueue.main.async {
                 self?.refreshControl.endRefreshing()
+                self?.errorLabel.isHidden = true
                 switch state {
-                case .idle: break
-                case .loading: break
+                case .idle:
+                    self?.activityIndicator.stopAnimating()
+                case .loading:
+                    self?.activityIndicator.startAnimating()
                 case .success(let dog):
+                    self?.activityIndicator.stopAnimating()
                     self?.dogView.imageView.load(from: dog.imageURL)
-                case .failure: break
+                case .failure:
+                    self?.activityIndicator.stopAnimating()
+                    self?.errorLabel.isHidden = false
                 }
             }
         }
