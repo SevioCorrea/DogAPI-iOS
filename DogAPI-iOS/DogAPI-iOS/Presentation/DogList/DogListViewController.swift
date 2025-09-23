@@ -10,53 +10,9 @@ import UIKit
 final class DogListViewController: UIViewController {
 
     private let viewModel = DogListViewModel()
-
-    private let scrollView: UIScrollView = {
-        let sv = UIScrollView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        return sv
-    }()
-
-    private let contentView: UIView = {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
-    }()
-
-    private let tapLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Tap the dog"
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let bottomLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Pull down to fetch a new dog"
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let arrowImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(systemName: "chevron.down")
-        iv.tintColor = .gray
-        iv.contentMode = .scaleAspectFit
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
-    }()
-
-    private let dogImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
-    }()
-
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    private let dogView = DogImageView()
     private let refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
@@ -70,15 +26,16 @@ final class DogListViewController: UIViewController {
     }
 
     private func setupViews() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(tapLabel)
-        contentView.addSubview(dogImageView)
-        contentView.addSubview(bottomLabel)
-        contentView.addSubview(arrowImageView)
+        contentView.addSubview(dogView)
 
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+
+        dogView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -92,27 +49,15 @@ final class DogListViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
-            tapLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-            tapLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-
-            dogImageView.topAnchor.constraint(equalTo: tapLabel.bottomAnchor, constant: 20),
-            dogImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            dogImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
-            dogImageView.heightAnchor.constraint(equalToConstant: 250),
-
-            bottomLabel.topAnchor.constraint(equalTo: dogImageView.bottomAnchor, constant: 20),
-            bottomLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-
-            arrowImageView.topAnchor.constraint(equalTo: bottomLabel.bottomAnchor, constant: 8),
-            arrowImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            arrowImageView.widthAnchor.constraint(equalToConstant: 20),
-            arrowImageView.heightAnchor.constraint(equalToConstant: 20),
-            arrowImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+            dogView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            dogView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            dogView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            dogView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapImage))
-        dogImageView.isUserInteractionEnabled = true
-        dogImageView.addGestureRecognizer(tapGesture)
+        dogView.imageView.isUserInteractionEnabled = true
+        dogView.imageView.addGestureRecognizer(tapGesture)
     }
 
     private func setupBindings() {
@@ -120,14 +65,11 @@ final class DogListViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.refreshControl.endRefreshing()
                 switch state {
-                case .idle:
-                    break
-                case .loading:
-                    break
+                case .idle: break
+                case .loading: break
                 case .success(let dog):
-                    self?.loadImage(from: dog.imageURL)
-                case .failure:
-                    break
+                    self?.dogView.imageView.load(from: dog.imageURL)
+                case .failure: break
                 }
             }
         }
@@ -135,24 +77,11 @@ final class DogListViewController: UIViewController {
 
     @objc private func didTapImage() {
         guard let dog = viewModel.lastDog else { return }
-        let detailVM = DogDetailViewModel(dog: dog)
-        let detailVC = DogDetailViewController(viewModel: detailVM)
+        let detailVC = DogDetailViewController(viewModel: DogDetailViewModel(dog: dog))
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
     @objc private func didPullToRefresh() {
         viewModel.fetchDog()
-    }
-
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        DispatchQueue.global().async {
-            if let data = try? Data(contentsOf: url),
-               let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.dogImageView.image = image
-                }
-            }
-        }
     }
 }
