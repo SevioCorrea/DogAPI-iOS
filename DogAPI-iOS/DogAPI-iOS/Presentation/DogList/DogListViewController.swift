@@ -12,7 +12,7 @@ final class DogListViewController: UIViewController {
     private let viewModel = DogListViewModel()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private let dogView = DogImageView()
+    private let dogView = DogImageView(mode: .list)
     private let refreshControl = UIRefreshControl()
 
     private let activityIndicator: UIActivityIndicatorView = {
@@ -46,6 +46,8 @@ final class DogListViewController: UIViewController {
     private func setupViews() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
+        dogView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(dogView)
@@ -54,8 +56,6 @@ final class DogListViewController: UIViewController {
 
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
-
-        dogView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -77,7 +77,7 @@ final class DogListViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: dogView.imageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: dogView.imageView.centerYAnchor),
 
-            errorLabel.topAnchor.constraint(equalTo: dogView.arrowImageView.bottomAnchor, constant: 12),
+            errorLabel.topAnchor.constraint(equalTo: dogView.bottomAnchor, constant: 12),
             errorLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
 

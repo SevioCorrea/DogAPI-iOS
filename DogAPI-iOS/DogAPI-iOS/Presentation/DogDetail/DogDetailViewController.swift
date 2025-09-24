@@ -10,12 +10,17 @@ import UIKit
 final class DogDetailViewController: UIViewController {
 
     private let viewModel: DogDetailViewModel
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    private let dogView = DogImageView(mode: .detail)
 
-    private let dogImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+    private let breedLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
 
     init(viewModel: DogDetailViewModel) {
@@ -24,36 +29,54 @@ final class DogDetailViewController: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Dog Detail"
+
         setupViews()
-        loadImage()
+        configure()
     }
 
     private func setupViews() {
-        view.addSubview(dogImageView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        dogView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(dogView)
+        contentView.addSubview(breedLabel)
+
         NSLayoutConstraint.activate([
-            dogImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dogImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            dogImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            dogImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.6)
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
+            dogView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            dogView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            dogView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            dogView.heightAnchor.constraint(equalTo: dogView.widthAnchor),
+
+            breedLabel.topAnchor.constraint(equalTo: dogView.bottomAnchor, constant: 16),
+            breedLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            breedLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            breedLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
 
-    private func loadImage() {
-        guard let url = URL(string: viewModel.imageURL) else { return }
-        DispatchQueue.global().async {
-            if let data = try? Data(contentsOf: url),
-               let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.dogImageView.image = image
-                }
-            }
-        }
+    private func configure() {
+        dogView.imageView.load(from: viewModel.imageURL)
+        breedLabel.text = viewModel.breed
     }
 }
