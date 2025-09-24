@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		22A018A12E82FBE000E218E2 /* Exceptions for "DogAPI-iOS" folder in "DogAPI-iOS" target */ = {
+		22C3D3C72E84546500AA2191 /* Exceptions for "DogAPI-iOS" folder in "DogAPI-iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -40,22 +40,22 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		22A0187B2E82FBDD00E218E2 /* DogAPI-iOS */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				22A018A12E82FBE000E218E2 /* Exceptions for "DogAPI-iOS" folder in "DogAPI-iOS" target */,
-			);
-			path = "DogAPI-iOS";
-			sourceTree = "<group>";
-		};
-		22A018922E82FBE000E218E2 /* DogAPI-iOSTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "DogAPI-iOSTests";
-			sourceTree = "<group>";
-		};
 		22A0189C2E82FBE000E218E2 /* DogAPI-iOSUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "DogAPI-iOSUITests";
+			sourceTree = "<group>";
+		};
+		22C3D3612E84542500AA2191 /* DogAPI-Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "DogAPI-Tests";
+			sourceTree = "<group>";
+		};
+		22C3D3B42E84546500AA2191 /* DogAPI-iOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				22C3D3C72E84546500AA2191 /* Exceptions for "DogAPI-iOS" folder in "DogAPI-iOS" target */,
+			);
+			path = "DogAPI-iOS";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -88,8 +88,8 @@
 		22A018702E82FBDD00E218E2 = {
 			isa = PBXGroup;
 			children = (
-				22A0187B2E82FBDD00E218E2 /* DogAPI-iOS */,
-				22A018922E82FBE000E218E2 /* DogAPI-iOSTests */,
+				22C3D3B42E84546500AA2191 /* DogAPI-iOS */,
+				22C3D3612E84542500AA2191 /* DogAPI-Tests */,
 				22A0189C2E82FBE000E218E2 /* DogAPI-iOSUITests */,
 				22A0187A2E82FBDD00E218E2 /* Products */,
 			);
@@ -121,7 +121,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				22A0187B2E82FBDD00E218E2 /* DogAPI-iOS */,
+				22C3D3B42E84546500AA2191 /* DogAPI-iOS */,
 			);
 			name = "DogAPI-iOS";
 			packageProductDependencies = (
@@ -144,7 +144,7 @@
 				22A018912E82FBE000E218E2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				22A018922E82FBE000E218E2 /* DogAPI-iOSTests */,
+				22C3D3612E84542500AA2191 /* DogAPI-Tests */,
 			);
 			name = "DogAPI-iOSTests";
 			packageProductDependencies = (
@@ -191,6 +191,7 @@
 					};
 					22A0188E2E82FBE000E218E2 = {
 						CreatedOnToolsVersion = 26.0.1;
+						LastSwiftMigration = 2600;
 						TestTargetID = 22A018782E82FBDD00E218E2;
 					};
 					22A018982E82FBE000E218E2 = {
@@ -293,9 +294,9 @@
 				INFOPLIST_FILE = "DogAPI-iOS/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -324,9 +325,9 @@
 				INFOPLIST_FILE = "DogAPI-iOS/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -467,6 +468,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -477,6 +479,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -488,6 +491,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
