@@ -9,17 +9,35 @@ import Foundation
 
 final class DogListViewModel {
 
-    enum ViewState {
+    enum ViewState: Equatable {
         case idle
         case loading
         case success(Dog)
         case failure(Error)
+        
+        // Implementa Equatable manualmente para os casos com valores associados
+        static func == (lhs: ViewState, rhs: ViewState) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle): return true
+            case (.loading, .loading): return true
+            case (.success(let dog1), .success(let dog2)):
+                return dog1.imageURL == dog2.imageURL
+            case (.failure, .failure):
+                return true // Você pode detalhar comparando códigos de erro se quiser
+            default:
+                return false
+            }
+        }
     }
 
-    private let fetchDogUseCase = FetchRandomDogUseCase()
+    private let fetchDogUseCase: FetchDogUseCaseProtocol
     var stateChanged: ((ViewState) -> Void)?
-    
+
     private(set) var lastDog: Dog?
+
+    init(fetchDogUseCase: FetchDogUseCaseProtocol = FetchRandomDogUseCase()) {
+        self.fetchDogUseCase = fetchDogUseCase
+    }
 
     func fetchDog() {
         stateChanged?(.loading)

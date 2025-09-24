@@ -7,23 +7,10 @@
 
 import Foundation
 
-final class FetchRandomDogUseCase {
-    
-    private let remoteDataSource: DogRemoteDataSource
-    
-    init(remoteDataSource: DogRemoteDataSource = DogRemoteDataSource()) {
-        self.remoteDataSource = remoteDataSource
-    }
-    
+final class FetchRandomDogUseCase: FetchDogUseCaseProtocol {
     func execute(completion: @escaping (Result<Dog, Error>) -> Void) {
-        remoteDataSource.fetchRandomDog { result in
-            switch result {
-            case .success(let dto):
-                let dog = Dog(imageURL: dto.message)
-                completion(.success(dog))
-            case .failure(let error):
-                completion(.failure(error))
-            }
+        API.fetchRandomDog { result in
+            completion(result)
         }
     }
 }
