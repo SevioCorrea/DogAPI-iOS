@@ -20,6 +20,7 @@ final class DogDetailViewController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.accessibilityIdentifier = "breedLabel"
         return label
     }()
 

@@ -29,6 +29,7 @@ final class DogImageView: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.accessibilityIdentifier = "dogImageView"
         return iv
     }()
 
