@@ -1,3 +1,57 @@
+# English 🇬🇧🇺🇸
+
+# DogAPI-iOS
+
+This is a simple iOS project that displays random dogs using the [Dog CEO API](https://dog.ceo/dog-api/). Even though it’s small, I tried to follow **Clean Architecture** principles, separating responsibilities between View, ViewModel, UseCase, and DataSource. No external libraries were used to keep the code didactic and easy to understand.
+
+## Features
+
+- Main screen (`DogListViewController`) showing a random dog.
+- Pull to refresh to fetch a new dog.
+- Error message when the dog cannot be loaded.
+- Detail screen (`DogDetailViewController`) showing the dog image in detail and the breed extracted from the URL.
+
+## Architecture
+
+The project follows the **Clean Architecture** pattern:
+
+- **ViewModels:** Manage state and interact with UseCases (`DogListViewModel` and `DogDetailViewModel`).
+- **UseCases:** `FetchRandomDogUseCase` implements `FetchDogUseCaseProtocol` and encapsulates fetch logic.
+- **DataSource:** `DogRemoteDataSource` and `APIService` isolate API communication.
+- **Views:** `DogImageView` is a custom view reused both in the list and in the detail screen.
+- **Controllers:** `DogListViewController` and `DogDetailViewController` manage the interface and connect Views and ViewModels.
+
+## Tests
+
+- **Unit (`DogAPI-Tests`):**
+  - Verifies that the returned URL is not empty.
+  - `lastDog` is updated after fetch.
+  - State changes from `loading` to `success`.
+- **UI (`DogListUITests`):**
+  - A key flow: tapping on the image navigates to the detail screen and confirms that the `breedLabel` appears.
+
+## Notes
+
+- The project uses `Equatable` in the ViewModel’s `ViewState` to simplify unit tests for state comparison.
+- UI tests use `accessibilityIdentifier` to locate elements in the interface.
+- No external libraries were used. All code is native Swift and UIKit.
+
+## Future Improvements
+
+- Implement **image caching** to reduce network usage and improve list performance.
+- Add **more detailed error handling** and user-friendly messages.
+- Include **subtle animations** in the transition between list and detail screens for a smoother experience.
+
+## How to run the tests
+
+1. Open the project in Xcode.
+2. Select the `DogAPI-iOS` scheme.
+3. To run unit and UI tests: press `Cmd + U` in the simulator.
+
+---
+
+# Português 🇧🇷🇵🇹
+
 # DogAPI-iOS
 
 Este é um projeto iOS simples que exibe cães aleatórios usando a API [Dog CEO](https://dog.ceo/dog-api/). Mesmo sendo pequeno, tentei seguir os princípios da **Clean Architecture**, separando responsabilidades entre View, ViewModel, UseCase e DataSource. Nenhuma biblioteca externa foi utilizada para manter o código didático e fácil de entender.
